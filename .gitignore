@@ -1,2 +1,6 @@
 dist
 sol-demo-contract/target
+test-ledger/
+client/keys/*
+!/**/.gitkeep
+client/node_modules
