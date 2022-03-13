@@ -46,3 +46,14 @@ solana transfer Gh3EmjisqQZLEyW6fjW1VWg82b3jmomwqr2G7285m1US 1 --allow-unfunded-
 
 
 
+Process to build:
+
+TS Side:
+    Create useraccount
+    Get pubkey from useraccount
+    Create account owned by program that has holds the useraccount pubkey and a Person struct
+    Now, have the useraccount send a transaction with a PurchaseStruct
+    Have the contract check the signed pubkey on the transaction to confirm it's from the right useraccount
+    If so, then add the purchased item to the struct
+
+From TS side, create an account owned by the contract that has a person's pubkey
