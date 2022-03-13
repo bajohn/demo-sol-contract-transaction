@@ -1,20 +1,4 @@
-import os from 'os';
-import fs from 'mz/fs';
-
-import {
-    Keypair,
-    Connection,
-    PublicKey,
-    LAMPORTS_PER_SOL,
-    SystemProgram,
-    TransactionInstruction,
-    Transaction,
-    sendAndConfirmTransaction,
-    TransferParams,
-    ParsedAccountData,
-} from '@solana/web3.js';
-import * as borsh from 'borsh';
-import * as crypto from 'crypto';
+import { createPersonAccount, createUserKey, getWalletKeyPair } from "./lib";
 
 
 
@@ -23,15 +7,19 @@ const main = async () => {
     const programPath = '../dist/program/soldemocontract-keypair.json';
     const userPath = 'keys/userkeypair.json';
 
+    // 1. (TS) Create useraccount
     await createUserKey(userPath);
+
+    // 2. (TS) Get pubkey from useraccount
+    const userKeyPair = await getWalletKeyPair(userPath);
+
+    // 3. (TS) Create account owned by program that has 
+    // holds the useraccount pubkey and a Person struct
+    createPersonAccount()
+
 };
 
 
-const createUserKey = async (filePath: string): Promise<string> => {
-    const newPair = Keypair.generate();
-    console.log(`New key stored at ${filePath}, public key ${newPair.publicKey}`);
-    fs.writeFile(filePath, `[${newPair.secretKey.toString()}]`, { encoding: 'utf8' });
-    return filePath;
-};
+
 
 main();
