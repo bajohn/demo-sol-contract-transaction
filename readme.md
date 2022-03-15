@@ -44,6 +44,9 @@ solana transfer {wallet public key} 1 --allow-unfunded-recipient
 solana transfer Gh3EmjisqQZLEyW6fjW1VWg82b3jmomwqr2G7285m1US 1 --allow-unfunded-recipient
 ```
 
+solana transfer G3Hqs2CAtLE9wpMRn4wVA1eF8zEVAkvVix5wPjbGyFBH .1 --allow-unfunded-recipient
+
+solana transfer FdbxDXjL6MQsu61EjZcKTuKwGHWrU6q8JPvJPbrxTADu .1 --allow-unfunded-recipient
 
 
 Process to build:

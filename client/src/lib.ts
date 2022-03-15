@@ -87,3 +87,4 @@ export const getProgramKeypair = async (connection: Connection, programPath: str
     console.log(`Program ID ${programKeyPair.publicKey.toString()}`);
     return programKeyPair;
 };
+
