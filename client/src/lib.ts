@@ -15,6 +15,7 @@ import {
 } from '@solana/web3.js';
 import * as borsh from 'borsh';
 import * as crypto from 'crypto';
+import { personAccSize } from './instancedata';
 
 
 export const createUserKey = async (filePath: string): Promise<string> => {
@@ -41,7 +42,7 @@ export const createPersonAccount = async (connection: Connection, payer: Keypair
     );
 
     // Minimum size per Solana docs https://docs.solana.com/developing/programming-model/accounts
-    const MIN_ACC_BYTES = 128;
+    const PERSON_ACC_BYTES = personAccSize();
     // Check if the greeting account has already been created
     const personAccount = await connection.getAccountInfo(personAccountKey);
     if (personAccount === null) {
@@ -49,7 +50,7 @@ export const createPersonAccount = async (connection: Connection, payer: Keypair
             'Creating account', personAccountKey.toBase58(),
         );
         const lamports = await connection.getMinimumBalanceForRentExemption(
-            MIN_ACC_BYTES,
+            PERSON_ACC_BYTES,
         );
         const transaction = new Transaction().add(
             SystemProgram.createAccountWithSeed({
@@ -58,7 +59,7 @@ export const createPersonAccount = async (connection: Connection, payer: Keypair
                 seed: FIXED_ACC_SEED,
                 newAccountPubkey: personAccountKey,
                 lamports,
-                space: MIN_ACC_BYTES,
+                space: PERSON_ACC_BYTES,
                 programId,
             }),
         );
@@ -71,10 +72,18 @@ export const createPersonAccount = async (connection: Connection, payer: Keypair
     return personAccountKey;
 };
 
-const establishConnection = async () => {
+export const establishConnection = async () => {
     const rpcUrl = 'http://127.0.0.1:8899';
     const connection = new Connection(rpcUrl, 'confirmed');
     const version = await connection.getVersion();
     console.log('Connection to cluster established:', rpcUrl);
     return connection;
+};
+
+export const getProgramKeypair = async (connection: Connection, programPath: string) => {
+    const secretKeyString = await fs.readFile(programPath, { encoding: 'utf8' });
+    const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
+    const programKeyPair = Keypair.fromSecretKey(secretKey)
+    console.log(`Program ID ${programKeyPair.publicKey.toString()}`);
+    return programKeyPair;
 };
