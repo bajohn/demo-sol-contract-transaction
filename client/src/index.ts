@@ -1,10 +1,11 @@
 import {
+    airdropMin,
     createPersonAccount,
-    createUserKey,
     establishConnection,
     getProgramKeypair,
-    getWalletKeyPair
+    storeRandomKeypair,
 } from "./lib";
+const assert = require('assert');
 
 
 
@@ -12,17 +13,17 @@ const main = async () => {
 
     const programPath = '../dist/program/soldemocontract-keypair.json';
     const userPath = 'keys/userkeypair.json';
-    // TODO: run-once logic here, otherwise user account is unfunded.
     // 1. (TS) Create useraccount
-    // await createUserKey(userPath);
-
     // 2. (TS) Get pubkey from useraccount
-    const userKeyPair = await getWalletKeyPair(userPath);
-    const connection = await establishConnection();
-    const resp = await connection.getBalance(userKeyPair.publicKey);
-    console.log(resp);
-    return 0;
+    // await createUserKey(userPath);
+    const userKeyPair = await storeRandomKeypair(userPath);
 
+
+    const connection = await establishConnection();
+    const balance = await airdropMin(connection, userKeyPair);
+    console.log('final bal', balance);
+
+    return 0;
     // 3. (TS) Create account owned by program that  
     // holds the useraccount pubkey and a Person struct
 
