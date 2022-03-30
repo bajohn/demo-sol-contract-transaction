@@ -42,8 +42,9 @@ export const createPersonAccount = async (connection: Connection, payer: Keypair
     );
 
     // Minimum size per Solana docs https://docs.solana.com/developing/programming-model/accounts
-    const PERSON_ACC_BYTES = personAccSize();
-    // Check if the greeting account has already been created
+    const PERSON_ACC_BYTES = 2 * personAccSize();
+    console.log('BYTES', PERSON_ACC_BYTES)
+    // Check if the person account has already been created
     const personAccount = await connection.getAccountInfo(personAccountKey);
     if (personAccount === null) {
         console.log(

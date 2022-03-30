@@ -23,11 +23,14 @@ const main = async () => {
     const balance = await airdropMin(connection, userKeyPair);
     console.log('final bal', balance);
 
-    return 0;
+
     // 3. (TS) Create account owned by program that  
     // holds the useraccount pubkey and a Person struct
 
     const programKeypair = await getProgramKeypair(connection, programPath);
+
+    // TODO: This is failing. Do we need to give credits to the person account
+    // for rent?
     createPersonAccount(connection, userKeyPair, programKeypair.publicKey)
 
 };

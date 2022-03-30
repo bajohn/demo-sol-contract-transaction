@@ -28,7 +28,7 @@ solana program deploy ./dist/program/soldemocontract.so
 
 Then run local client via
 ```
-cd cw-client
+cd client
 npm run dev
 ```
 
