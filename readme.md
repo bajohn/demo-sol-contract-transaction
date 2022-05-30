@@ -22,8 +22,8 @@ solana program deploy ./dist/program/soldemocontract.so
 ```
 
 
-
-
+solana transfer qrz4D5SVK7dbHo9TGZFnLS41oZZdgnu7R2h9pAaq32f 1 --allow-unfunded-recipient
+solana transfer 7zv7uPWHwyiM8vXcdt1ohaj5SRidza99u67oUWGfT3Dc 1 --allow-unfunded-recipient
 
 
 Then run local client via

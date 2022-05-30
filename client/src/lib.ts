@@ -34,7 +34,7 @@ export const storeRandomKeypair = async (filePath: string, overwrite = false): P
 
 
 export const createPersonAccount = async (connection: Connection, payer: Keypair, programId: PublicKey) => {
-    const FIXED_ACC_SEED = 'A unique seed that would normally be securely generated';
+    const FIXED_ACC_SEED = 'A unique seed thdwadawdated';
     const personAccountKey = await PublicKey.createWithSeed(
         payer.publicKey,
         FIXED_ACC_SEED,
@@ -44,6 +44,7 @@ export const createPersonAccount = async (connection: Connection, payer: Keypair
     // Minimum size per Solana docs https://docs.solana.com/developing/programming-model/accounts
     const PERSON_ACC_BYTES = 2 * personAccSize();
     console.log('BYTES', PERSON_ACC_BYTES)
+    await airdropMin(connection, personAccountKey)
     // Check if the person account has already been created
     const personAccount = await connection.getAccountInfo(personAccountKey);
     if (personAccount === null) {
@@ -96,7 +97,7 @@ export const getProgramKeypair = async (connection: Connection, programPath: str
  * @param multipleOfMin 
  * @returns Account balance after airdrop
  */
-export const airdropMin = async (connection: Connection, keypair: Keypair, multipleOfMin = 2): Promise<number> => {
+export const airdropMin = async (connection: Connection, publicKey: PublicKey, multipleOfMin = 2): Promise<number> => {
     // Minimum size per Solana docs https://docs.solana.com/developing/programming-model/accounts
     const MIN_ACC_BYTES = 128;
     const MIN_EXEMPT_LAMPORTS = await connection.getMinimumBalanceForRentExemption(
@@ -104,9 +105,9 @@ export const airdropMin = async (connection: Connection, keypair: Keypair, multi
     );
     const AIRDROP_AMOUNT = multipleOfMin * MIN_EXEMPT_LAMPORTS;
     console.log('amount', AIRDROP_AMOUNT);
-    const airdropTx = await connection.requestAirdrop(keypair.publicKey, AIRDROP_AMOUNT);
+    const airdropTx = await connection.requestAirdrop(publicKey, AIRDROP_AMOUNT);
     await connection.confirmTransaction(airdropTx);
 
-    const balance = await connection.getBalance(keypair.publicKey);
+    const balance = await connection.getBalance(publicKey);
     return balance;
 }

@@ -20,7 +20,7 @@ const main = async () => {
 
 
     const connection = await establishConnection();
-    const balance = await airdropMin(connection, userKeyPair);
+    const balance = await airdropMin(connection, userKeyPair.publicKey);
     console.log('final bal', balance);
 
 
@@ -29,8 +29,6 @@ const main = async () => {
 
     const programKeypair = await getProgramKeypair(connection, programPath);
 
-    // TODO: This is failing. Do we need to give credits to the person account
-    // for rent?
     createPersonAccount(connection, userKeyPair, programKeypair.publicKey)
 
 };
