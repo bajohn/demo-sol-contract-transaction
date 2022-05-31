@@ -1,5 +1,7 @@
+import { ParsedAccountData } from "@solana/web3.js";
 import {
     airdropMin,
+    checkAccount,
     createPersonAccount,
     establishConnection,
     getProgramKeypair,
@@ -28,6 +30,7 @@ const main = async () => {
     const programKeypair = await getProgramKeypair(connection, programPath);
     const personAccount = await createPersonAccount(connection, userKeyPair, programKeypair.publicKey)
 
+    // TODO- clean these up
     // Try calling contract
     await runContract(
         connection,
@@ -35,6 +38,8 @@ const main = async () => {
         personAccount,
         userKeyPair
     );
+
+    await checkAccount(connection, personAccount);
 };
 
 

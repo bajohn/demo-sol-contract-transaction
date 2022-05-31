@@ -16,7 +16,7 @@ import {
 import * as borsh from 'borsh';
 import * as crypto from 'crypto';
 import { personAccSize, personInstance } from './instancedata';
-import { PersonSchema } from './schemata';
+import { PersonSchema, PersonStruct } from './schemata';
 
 
 export const storeRandomKeypair = async (filePath: string, overwrite = false): Promise<Keypair> => {
@@ -35,7 +35,7 @@ export const storeRandomKeypair = async (filePath: string, overwrite = false): P
 
 
 export const createPersonAccount = async (connection: Connection, payer: Keypair, programId: PublicKey) => {
-    const FIXED_ACC_SEED = 'A unique seed thdwadawdated';
+    const FIXED_ACC_SEED = 'A unique trdetrseed thdwadawdated';
     const personAccountKey = await PublicKey.createWithSeed(
         payer.publicKey,
         FIXED_ACC_SEED,
@@ -43,7 +43,7 @@ export const createPersonAccount = async (connection: Connection, payer: Keypair
     );
 
     // Minimum size per Solana docs https://docs.solana.com/developing/programming-model/accounts
-    const PERSON_ACC_BYTES = 2 * personAccSize();
+    const PERSON_ACC_BYTES = 20 * personAccSize();
     // Fund the account for rent
     await airdropMin(connection, personAccountKey, PERSON_ACC_BYTES);
     // Check if the person account has already been created
@@ -145,4 +145,21 @@ export const airdropMin = async (connection: Connection, publicKey: PublicKey, a
 
     const balance = await connection.getBalance(publicKey);
     return balance;
+}
+
+export const checkAccount = async (connection: Connection, accountKey: PublicKey) => {
+    // Check that the contract stored the person struct that it was sent 
+    const resp = await connection.getParsedAccountInfo(accountKey);
+    console.log('Check hashmap account', accountKey.toBase58())
+    const parsedData = resp.value.data as ParsedAccountData;
+    console.log(parsedData.parsed);
+    // const programData = parsedData.parsed.info.programData as string;
+    // console.log(programData);
+    // var binary_string = Buffer.from(programData, 'base64');
+    // const deserialized = borsh.deserialize(
+    //     PersonSchema,
+    //     PersonStruct,
+    //     binary_string
+    // );
+    // console.log(deserialized);
 }

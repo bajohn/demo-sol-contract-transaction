@@ -24,13 +24,11 @@ pub struct PersonStruct {
     pub purchases: Vec<PurchaseStruct>,
 }
 
-
-
 entrypoint!(process_instruction);
 pub fn process_instruction(
     _program_id: &Pubkey,
     accounts: &[AccountInfo],
-    _instruction_data: &[u8],
+    instruction_data: &[u8],
 ) -> ProgramResult {
     sol_log_compute_units();
     msg!("Program entry");
@@ -39,22 +37,39 @@ pub fn process_instruction(
     let sender_account = next_account_info(accounts_iter)?;
     let person_account = next_account_info(accounts_iter)?;
 
-    // let person_res = PersonStruct::try_from_slice(&person_account.data.borrow());
-    let person_res = PersonStruct::try_from_slice(_instruction_data);
+    let person_res = PersonStruct::try_from_slice(instruction_data);
     let mut person_acc = match person_res {
         Ok(T) => {
-            msg!("Deserialized successfully");
+            msg!("Deserialized program input successfully");
             msg!(&T.person_id);
-            
+            let mut cur = person_account.data.borrow_mut();
+
+
+            msg!(&cur.len().to_string());
+            // for i in instruction_data {
+            //     cur[*i as usize] = instruction_data[*i as usize];
+            // }
+
+          
+            //T.serialize(&mut &mut person_account.data.borrow_mut()[..])?;
         }
         Err(E) => {
-            msg!("Failed to deserialize, probably new address");
+            msg!("Failed to deserialize program input");
         }
     };
 
 
 
-
+    let stored_person_res = PersonStruct::try_from_slice(&person_account.data.borrow());
+    let stored_person = match stored_person_res {
+        Ok(T) => {
+            msg!("Deserialized stored person successfully");
+            msg!(&T.person_id);
+        }
+        Err(E) => {
+            msg!("Failed to deserialize stored person");
+        }
+    };
 
     Ok(())
 }
