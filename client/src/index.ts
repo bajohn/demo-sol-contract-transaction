@@ -3,6 +3,7 @@ import {
     createPersonAccount,
     establishConnection,
     getProgramKeypair,
+    runContract,
     storeRandomKeypair,
 } from "./lib";
 const assert = require('assert');
@@ -15,7 +16,6 @@ const main = async () => {
     const userPath = 'keys/userkeypair.json';
     // 1. (TS) Create useraccount
     // 2. (TS) Get pubkey from useraccount
-    // await createUserKey(userPath);
     const userKeyPair = await storeRandomKeypair(userPath);
 
     const connection = await establishConnection();
@@ -26,8 +26,15 @@ const main = async () => {
     // 3. (TS) Create account owned by program that  
     // holds the useraccount pubkey and a Person struct
     const programKeypair = await getProgramKeypair(connection, programPath);
-    createPersonAccount(connection, userKeyPair, programKeypair.publicKey)
+    const personAccount = await createPersonAccount(connection, userKeyPair, programKeypair.publicKey)
 
+    // Try calling contract
+    await runContract(
+        connection,
+        programKeypair.publicKey,
+        personAccount,
+        userKeyPair
+    );
 };
 
 

@@ -15,7 +15,8 @@ import {
 } from '@solana/web3.js';
 import * as borsh from 'borsh';
 import * as crypto from 'crypto';
-import { personAccSize } from './instancedata';
+import { personAccSize, personInstance } from './instancedata';
+import { PersonSchema } from './schemata';
 
 
 export const storeRandomKeypair = async (filePath: string, overwrite = false): Promise<Keypair> => {
@@ -88,6 +89,40 @@ export const getProgramKeypair = async (connection: Connection, programPath: str
     const programKeyPair = Keypair.fromSecretKey(secretKey)
     console.log(`Program ID ${programKeyPair.publicKey.toString()}`);
     return programKeyPair;
+};
+
+export const runContract = async (
+    connection: Connection,
+    programId: PublicKey,
+    contractStorage: PublicKey,
+    senderKeypair: Keypair
+) => {
+
+    const uArr = borsh.serialize(
+        PersonSchema,
+        personInstance());
+
+    const instruction = new TransactionInstruction({
+        keys: [
+            {
+                pubkey: senderKeypair.publicKey,
+                isSigner: true,
+                isWritable: true
+            },
+            {
+                pubkey: contractStorage,
+                isSigner: false,
+                isWritable: true
+            },
+        ],
+        programId,
+        data: Buffer.from(uArr)
+    });
+    await sendAndConfirmTransaction(
+        connection,
+        new Transaction().add(instruction),
+        [senderKeypair],
+    );
 };
 
 /**

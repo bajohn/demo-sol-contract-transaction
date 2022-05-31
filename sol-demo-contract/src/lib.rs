@@ -35,5 +35,26 @@ pub fn process_instruction(
     sol_log_compute_units();
     msg!("Program entry");
 
+    let accounts_iter = &mut accounts.iter();
+    let sender_account = next_account_info(accounts_iter)?;
+    let person_account = next_account_info(accounts_iter)?;
+
+    // let person_res = PersonStruct::try_from_slice(&person_account.data.borrow());
+    let person_res = PersonStruct::try_from_slice(_instruction_data);
+    let mut person_acc = match person_res {
+        Ok(T) => {
+            msg!("Deserialized successfully");
+            msg!(&T.person_id);
+            
+        }
+        Err(E) => {
+            msg!("Failed to deserialize, probably new address");
+        }
+    };
+
+
+
+
+
     Ok(())
 }
