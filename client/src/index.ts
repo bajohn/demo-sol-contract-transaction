@@ -18,7 +18,6 @@ const main = async () => {
     // await createUserKey(userPath);
     const userKeyPair = await storeRandomKeypair(userPath);
 
-
     const connection = await establishConnection();
     const balance = await airdropMin(connection, userKeyPair.publicKey);
     console.log('final bal', balance);
@@ -26,9 +25,7 @@ const main = async () => {
 
     // 3. (TS) Create account owned by program that  
     // holds the useraccount pubkey and a Person struct
-
     const programKeypair = await getProgramKeypair(connection, programPath);
-
     createPersonAccount(connection, userKeyPair, programKeypair.publicKey)
 
 };

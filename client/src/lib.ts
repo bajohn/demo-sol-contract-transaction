@@ -43,8 +43,8 @@ export const createPersonAccount = async (connection: Connection, payer: Keypair
 
     // Minimum size per Solana docs https://docs.solana.com/developing/programming-model/accounts
     const PERSON_ACC_BYTES = 2 * personAccSize();
-    console.log('BYTES', PERSON_ACC_BYTES)
-    await airdropMin(connection, personAccountKey)
+    // Fund the account for rent
+    await airdropMin(connection, personAccountKey, PERSON_ACC_BYTES);
     // Check if the person account has already been created
     const personAccount = await connection.getAccountInfo(personAccountKey);
     if (personAccount === null) {
@@ -97,14 +97,14 @@ export const getProgramKeypair = async (connection: Connection, programPath: str
  * @param multipleOfMin 
  * @returns Account balance after airdrop
  */
-export const airdropMin = async (connection: Connection, publicKey: PublicKey, multipleOfMin = 2): Promise<number> => {
+export const airdropMin = async (connection: Connection, publicKey: PublicKey, accBytes = 128): Promise<number> => {
     // Minimum size per Solana docs https://docs.solana.com/developing/programming-model/accounts
+    Math.max(128, accBytes);
     const MIN_ACC_BYTES = 128;
     const MIN_EXEMPT_LAMPORTS = await connection.getMinimumBalanceForRentExemption(
         MIN_ACC_BYTES,
     );
-    const AIRDROP_AMOUNT = multipleOfMin * MIN_EXEMPT_LAMPORTS;
-    console.log('amount', AIRDROP_AMOUNT);
+    const AIRDROP_AMOUNT = 2 * MIN_EXEMPT_LAMPORTS;
     const airdropTx = await connection.requestAirdrop(publicKey, AIRDROP_AMOUNT);
     await connection.confirmTransaction(airdropTx);
 
