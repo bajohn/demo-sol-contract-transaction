@@ -9,6 +9,13 @@ use solana_program::{
 };
 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
+pub struct SampleStruct {
+    pub basic: String,
+}
+
+
+
+#[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct PurchaseStruct {
     pub purchase_id: String,
     pub name: String,
@@ -41,24 +48,35 @@ pub fn process_instruction(
     let mut person_acc = match person_res {
         Ok(T) => {
             msg!("Deserialized program input successfully");
-            msg!(&T.person_id);
-            let mut cur = person_account.data.borrow_mut();
+            // let togo = PersonStruct {
+            //     person_id: String::from("hi"),
+            //     first_name: String::from("randy"),
+            //     last_name: String::from("johnson"),
+            //     purchases: vec![],
+            // };
+            // msg!(&togo.person_id);
 
+            let togo = SampleStruct {
+                basic: String::from("hii"),
+            };
+            msg!(&togo.basic);
 
-            msg!(&cur.len().to_string());
+            
+
+            // let mut cur = person_account.data.borrow_mut();
+
+            //person_account.data.try_borrow_mut_data() = *instruction_data;
+            // msg!(&cur.len().to_string());
             // for i in instruction_data {
             //     cur[*i as usize] = instruction_data[*i as usize];
             // }
 
-          
-            //T.serialize(&mut &mut person_account.data.borrow_mut()[..])?;
+            togo.serialize(&mut &mut person_account.data.borrow_mut()[..])?;
         }
         Err(E) => {
             msg!("Failed to deserialize program input");
         }
     };
-
-
 
     let stored_person_res = PersonStruct::try_from_slice(&person_account.data.borrow());
     let stored_person = match stored_person_res {

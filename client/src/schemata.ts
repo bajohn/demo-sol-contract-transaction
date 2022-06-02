@@ -13,6 +13,20 @@ interface iPerson {
     purchases: iPurchase[];
 };
 
+interface iSample {
+    basic: string
+}
+
+export class SampleStruct implements iSample {
+    basic: string;
+    constructor(fields: iSample) {
+        Object.assign(this, fields);
+    };
+
+};
+
+
+
 
 export class PurchaseStruct implements iPurchase {
     purchase_id: string;
@@ -35,6 +49,17 @@ export class PersonStruct implements iPerson {
         Object.assign(this, fields);
     }
 };
+
+export const SampleSchema = new Map<any, any>([
+    [
+        SampleStruct, {
+            kind: 'struct',
+            fields: [
+                ['basic', 'string'],
+            ]
+        }
+    ]
+])
 
 export const PersonSchema = new Map<any, any>([
     [

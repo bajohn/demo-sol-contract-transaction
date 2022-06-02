@@ -15,7 +15,7 @@ import {
 } from '@solana/web3.js';
 import * as borsh from 'borsh';
 import * as crypto from 'crypto';
-import { personAccSize, personInstance } from './instancedata';
+import { personAccSize, personInstance, sampleAccSize } from './instancedata';
 import { PersonSchema, PersonStruct } from './schemata';
 
 
@@ -35,7 +35,7 @@ export const storeRandomKeypair = async (filePath: string, overwrite = false): P
 
 
 export const createPersonAccount = async (connection: Connection, payer: Keypair, programId: PublicKey) => {
-    const FIXED_ACC_SEED = 'A unique trdetrseed thdwadawdated';
+    const FIXED_ACC_SEED = 'A dwadawdawdfggaw trdetrseed thdwadawdated';
     const personAccountKey = await PublicKey.createWithSeed(
         payer.publicKey,
         FIXED_ACC_SEED,
@@ -43,7 +43,8 @@ export const createPersonAccount = async (connection: Connection, payer: Keypair
     );
 
     // Minimum size per Solana docs https://docs.solana.com/developing/programming-model/accounts
-    const PERSON_ACC_BYTES = 20 * personAccSize();
+    // const PERSON_ACC_BYTES = 20 * personAccSize();
+    const PERSON_ACC_BYTES = sampleAccSize();
     // Fund the account for rent
     await airdropMin(connection, personAccountKey, PERSON_ACC_BYTES);
     // Check if the person account has already been created

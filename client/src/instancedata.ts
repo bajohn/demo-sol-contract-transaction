@@ -1,5 +1,5 @@
 import * as borsh from 'borsh';
-import { PersonSchema, PersonStruct, PurchaseStruct } from './schemata';
+import { PersonSchema, PersonStruct, PurchaseStruct, SampleSchema, SampleStruct } from './schemata';
 
 export const personInstance = () => {
     return new PersonStruct({
@@ -9,6 +9,12 @@ export const personInstance = () => {
         purchases: []
     });
 };
+export const sampleInstance = () => {
+    return new SampleStruct({
+        basic: 'hii'
+    });
+};
+
 
 export const purchaseInstance = () => {
     return [
@@ -26,6 +32,12 @@ export const purchaseInstance = () => {
         })
     ];
 };
+
+export const sampleAccSize = () => {
+    return borsh.serialize(
+        SampleSchema,
+        sampleInstance()).length
+}
 
 export const personAccSize = () => {
     const MAX_NAME_LEN = 32;
